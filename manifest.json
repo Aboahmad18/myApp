@@ -1,0 +1,21 @@
+{
+  "name": "صندوق العائلة والقبيلة",
+  "short_name": "صندوق العائلة",
+  "description": "تطبيق إدارة حسابات الجمعية العائلية وفروقات القبيلة",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#0f766e",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

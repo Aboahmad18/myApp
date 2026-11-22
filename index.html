@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>صندوق العائلة والقبيلة</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Tahoma, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 80px;
+            line-height: 1.5;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.18);
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .icon-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Tabs Navigation */
+        .tabs-wrapper {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tabs-wrapper::-webkit-scrollbar { display: none; }
+
+        .main-tab {
+            padding: 8px 14px;
+            border-radius: 10px 10px 0 0;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.92rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .main-tab.active {
+            background: var(--bg);
+            color: var(--primary);
+            border-color: var(--border);
+            position: relative;
+        }
+
+        .main-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--bg);
+        }
+
+        .add-tab-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+
+        /* Sub-Tabs Navigation */
+        .subtabs-bar {
+            padding: 12px 16px 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .subtabs-bar::-webkit-scrollbar { display: none; }
+
+        .sub-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sub-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .add-subtab-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: transparent;
+            border: 1px dashed var(--text-muted);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* Container */
+        .container {
+            padding: 12px 16px;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .subtab-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .subtab-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 10px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .stat-value.in { color: var(--success); }
+        .stat-value.out { color: var(--danger); }
+        .stat-value.bal { color: var(--primary-dark); }
+
+        /* Action Switcher (Income vs Expense) */
+        .mode-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+
+        .mode-btn {
+            padding: 9px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+
+        .mode-btn.active.in-mode {
+            background: var(--card);
+            color: var(--success);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .mode-btn.active.out-mode {
+            background: var(--card);
+            color: var(--danger);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Forms */
+        .form-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+            color: var(--text);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .calc-hint {
+            font-size: 0.8rem;
+            color: var(--primary-dark);
+            background: var(--primary-light);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .btn-in { background: var(--success); }
+        .btn-out { background: var(--danger); }
+        .btn-primary { background: var(--primary); }
+
+        /* Transactions List */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .list-header h3 {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .search-box {
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            width: 160px;
+        }
+
+        .tx-item {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-right: 4px solid var(--success);
+        }
+
+        .tx-item.expense {
+            border-right-color: var(--danger);
+        }
+
+        .tx-info {
+            flex: 1;
+        }
+
+        .tx-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .tx-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tx-tag {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #334155;
+        }
+
+        .tx-right {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .tx-amount {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .tx-amount.in { color: var(--success); }
+        .tx-amount.out { color: var(--danger); }
+
+        .btn-del {
+            background: #fee2e2;
+            color: var(--danger);
+            border: none;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 16px;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card);
+            width: 100%;
+            max-width: 420px;
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 16px;
+            color: var(--text-muted);
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px dashed var(--border);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>💼 صندوق العائلة والقبيلة</h1>
+    <div class="header-actions">
+        <button class="icon-btn" onclick="shareReport()" title="مشاركة كشف الحساب">📤 كشف</button>
+        <button class="icon-btn" onclick="openBackupModal()" title="نسخ احتياطي">⚙️ بيانات</button>
+    </div>
+</header>
+
+<!-- Main Tabs -->
+<div class="tabs-wrapper" id="mainTabsBar"></div>
+
+<!-- Sub Tabs -->
+<div class="subtabs-bar" id="subTabsBar"></div>
+
+<!-- Main Workspace -->
+<div class="container" id="workspace"></div>
+
+<!-- Modal: Add Main Tab -->
+<div class="modal-backdrop" id="modalMainTab">
+    <div class="modal">
+        <div class="modal-title">إضافة تبويب رئيسي جديد</div>
+        <div class="form-group">
+            <label>اسم التبويب الرئيسي</label>
+            <input type="text" id="newMainTabName" placeholder="مثال: فروقات القبيلة، صندوق الطوارئ...">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal('modalMainTab')">إلغاء</button>
+            <button class="btn-submit btn-primary" style="flex:1; margin:0;" onclick="createMainTab()">إنشاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Sub Tab -->
+<div class="modal-backdrop" id="modalSubTab">
+    <div class="modal">
+        <div class="modal-title">إضافة صندوق / تبويب فرعي</div>
+        <div class="form-group">
+            <label>اسم التبويب الفرعي (الموضوع)</label>
+            <input type="text" id="newSubTabName" placeholder="مثال: جمعية 2026، فرق قضية فلان...">
+        </div>
+        <div class="form-group">
+            <label>نظام الحساب في هذا الصندوق</label>
+            <select id="newSubTabType" onchange="toggleSharePriceField()">
+                <option value="general">دخل جماعي مفتوح (الجمعية العائلية)</option>
+                <option value="per_capita">مساهمة محددة لكل فرد ذكر (فروقات القبيلة)</option>
+            </select>
+        </div>
+        <div class="form-group" id="sharePriceGroup" style="display:none;">
+            <label>مبلغ الفرد الواحد (السهم)</label>
+            <input type="number" id="newSubTabSharePrice" placeholder="مثال: 5000">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal('modalSubTab')">إلغاء</button>
+            <button class="btn-submit btn-primary" style="flex:1; margin:0;" onclick="createSubTab()">إنشاء الصندوق</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Backup & Restore -->
+<div class="modal-backdrop" id="modalBackup">
+    <div class="modal">
+        <div class="modal-title">النسخ الاحتياطي ونقل البيانات</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">
+            جميع البيانات محفوظة على هاتفك. يُنصح بتصدير نسخة احتياطية دورياً.
+        </p>
+        <button class="btn-submit btn-primary" onclick="exportBackup()" style="margin-bottom:10px;">⬇️ تصدير ملف النسخة الاحتياطية</button>
+        <label style="margin-top:8px;">استعادة من ملف سابق:</label>
+        <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal('modalBackup')">إغلاق</button>
+        </div>
+    </div>
+</div>
+
+<!-- Datalist for Auto-saved Payers/Sources -->
+<datalist id="savedSourcesList"></datalist>
+
+<script>
+    // --- State Management ---
+    const STORAGE_KEY = 'family_tribe_fund_v1';
+    
+    let appData = {
+        activeMainId: 'main_1',
+        activeSubId: 'sub_1',
+        savedSources: [], // Stores unique names/sources for autocomplete
+        mainTabs: [
+            {
+                id: 'main_1',
+                name: 'الجمعية العائلية',
+                subTabs: [
+                    {
+                        id: 'sub_1',
+                        name: 'الصندوق الرئيسي',
+                        type: 'general', // 'general' or 'per_capita'
+                        sharePrice: 0,
+                        transactions: []
+                    }
+                ]
+            },
+            {
+                id: 'main_2',
+                name: 'فروقات القبيلة',
+                subTabs: [
+                    {
+                        id: 'sub_2',
+                        name: 'فرق عام (تجريبي)',
+                        type: 'per_capita',
+                        sharePrice: 5000,
+                        transactions: []
+                    }
+                ]
+            }
+        ]
+    };
+
+    let currentMode = 'income'; // 'income' or 'expense'
+    let searchQuery = '';
+
+    // --- Initialization ---
+    function init() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                appData = JSON.parse(saved);
+            } catch (e) {
+                console.error('Error loading data', e);
+            }
+        }
+        updateSourcesDatalist();
+        renderAll();
+    }
+
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        updateSourcesDatalist();
+    }
+
+    function getTodayDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatNumber(num) {
+        return Number(num || 0).toLocaleString('en-US');
+    }
+
+    // --- Navigation & Tabs ---
+    function getActiveMain() {
+        return appData.mainTabs.find(t => t.id === appData.activeMainId) || appData.mainTabs[0];
+    }
+
+    function getActiveSub() {
+        const main = getActiveMain();
+        if (!main || !main.subTabs.length) return null;
+        return main.subTabs.find(s => s.id === appData.activeSubId) || main.subTabs[0];
+    }
+
+    function selectMainTab(id) {
+        appData.activeMainId = id;
+        const main = getActiveMain();
+        appData.activeSubId = main.subTabs.length ? main.subTabs[0].id : null;
+        searchQuery = '';
+        saveData();
+        renderAll();
+    }
+
+    function selectSubTab(id) {
+        appData.activeSubId = id;
+        searchQuery = '';
+        saveData();
+        renderAll();
+    }
+
+    // --- Modals ---
+    function openModal(id) {
+        document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+    }
+
+    function openBackupModal() {
+        openModal('modalBackup');
+    }
+
+    function toggleSharePriceField() {
+        const type = document.getElementById('newSubTabType').value;
+        document.getElementById('sharePriceGroup').style.display = (type === 'per_capita') ? 'block' : 'none';
+    }
+
+    function createMainTab() {
+        const name = document.getElementById('newMainTabName').value.trim();
+        if (!name) return alert('يرجى كتابة اسم التبويب الرئيسي');
+        const newId = 'main_' + Date.now();
+        appData.mainTabs.push({
+            id: newId,
+            name: name,
+            subTabs: []
+        });
+        appData.activeMainId = newId;
+        appData.activeSubId = null;
+        document.getElementById('newMainTabName').value = '';
+        closeModal('modalMainTab');
+        saveData();
+        renderAll();
+    }
+
+    function createSubTab() {
+        const main = getActiveMain();
+        if (!main) return;
+        const name = document.getElementById('newSubTabName').value.trim();
+        const type = document.getElementById('newSubTabType').value;
+        const sharePrice = parseFloat(document.getElementById('newSubTabSharePrice').value) || 0;
+
+        if (!name) return alert('يرجى كتابة اسم التبويب الفرعي');
+        if (type === 'per_capita' && sharePrice <= 0) return alert('يرجى تحديد مبلغ صحيح للفرد الواحد');
+
+        const newSubId = 'sub_' + Date.now();
+        main.subTabs.push({
+            id: newSubId,
+            name: name,
+            type: type,
+            sharePrice: sharePrice,
+            transactions: []
+        });
+        appData.activeSubId = newSubId;
+        document.getElementById('newSubTabName').value = '';
+        document.getElementById('newSubTabSharePrice').value = '';
+        closeModal('modalSubTab');
+        saveData();
+        renderAll();
+    }
+
+    // --- Autocomplete Sources ---
+    function registerSource(name) {
+        if (!name) return;
+        const clean = name.trim();
+        if (clean && !appData.savedSources.includes(clean)) {
+            appData.savedSources.push(clean);
+        }
+    }
+
+    function updateSourcesDatalist() {
+        const datalist = document.getElementById('savedSourcesList');
+        datalist.innerHTML = appData.savedSources
+            .map(src => `<option value="${src}">`)
+            .join('');
+    }
+
+    // --- Transactions Logic ---
+    function setMode(mode) {
+        currentMode = mode;
+        renderWorkspace();
+    }
+
+    function toggleRemittanceField() {
+        const method = document.getElementById('txMethod').value;
+        document.getElementById('remittanceGroup').style.display = (method === 'حوالة') ? 'block' : 'none';
+    }
+
+    function autoCalcPerCapita() {
+        const sub = getActiveSub();
+        if (!sub || sub.type !== 'per_capita') return;
+        const count = parseInt(document.getElementById('txMembersCount').value) || 0;
+        const expected = count * sub.sharePrice;
+        const amountInput = document.getElementById('txAmount');
+        amountInput.value = expected > 0 ? expected : '';
+        const hint = document.getElementById('calcHintText');
+        if (hint) {
+            hint.textContent = count > 0 
+                ? `المستحق عن (${count}) أفراد × ${formatNumber(sub.sharePrice)} = ${formatNumber(expected)}`
+                : `قيمة الفرد الواحد: ${formatNumber(sub.sharePrice)}`;
+        }
+    }
+
+    function addTransaction(e) {
+        e.preventDefault();
+        const sub = getActiveSub();
+        if (!sub) return;
+
+        const date = document.getElementById('txDate').value || getTodayDate();
+        const amount = parseFloat(document.getElementById('txAmount').value);
+
+        if (!amount || amount <= 0) return alert('يرجى إدخال مبلغ صحيح');
+
+        if (currentMode === 'income') {
+            const source = document.getElementById('txSource').value.trim();
+            if (!source) return alert('يرجى إدخال اسم الدافع أو مصدر الدفعة');
+            
+            registerSource(source);
+
+            const method = document.getElementById('txMethod').value;
+            const remittanceNo = (method === 'حوالة') ? document.getElementById('txRemittanceNo').value.trim() : '';
+            const notes = document.getElementById('txNotes').value.trim();
+            
+            let membersCount = 0;
+            let expectedAmount = 0;
+            if (sub.type === 'per_capita') {
+                membersCount = parseInt(document.getElementById('txMembersCount').value) || 1;
+                expectedAmount = membersCount * sub.sharePrice;
+            }
+
+            sub.transactions.unshift({
+                id: 'tx_' + Date.now(),
+                kind: 'income',
+                date,
+                source,
+                amount,
+                method,
+                remittanceNo,
+                membersCount,
+                expectedAmount,
+                notes
+            });
+        } else {
+            const details = document.getElementById('txDetails').value.trim();
+            if (!details) return alert('يرجى كتابة تفاصيل المنصرف');
+
+            sub.transactions.unshift({
+                id: 'tx_' + Date.now(),
+                kind: 'expense',
+                date,
+                details,
+                amount
+            });
+        }
+
+        saveData();
+        renderWorkspace();
+    }
+
+    function deleteTransaction(txId) {
+        if (!confirm('هل أنت متأكد من حذف هذه العملية؟')) return;
+        const sub = getActiveSub();
+        sub.transactions = sub.transactions.filter(t => t.id !== txId);
+        saveData();
+        renderWorkspace();
+    }
+
+    function deleteCurrentSubTab() {
+        const main = getActiveMain();
+        const sub = getActiveSub();
+        if (!sub) return;
+        if (!confirm(`هل تريد حذف صندوق "${sub.name}" بجميع بياناته نهائياً؟`)) return;
+        main.subTabs = main.subTabs.filter(s => s.id !== sub.id);
+        appData.activeSubId = main.subTabs.length ? main.subTabs[0].id : null;
+        saveData();
+        renderAll();
+    }
+
+    // --- Rendering ---
+    function renderAll() {
+        renderMainTabs();
+        renderSubTabs();
+        renderWorkspace();
+    }
+
+    function renderMainTabs() {
+        const bar = document.getElementById('mainTabsBar');
+        let html = appData.mainTabs.map(tab => `
+            <button class="main-tab ${tab.id === appData.activeMainId ? 'active' : ''}" 
+                    onclick="selectMainTab('${tab.id}')">
+                ${tab.name}
+            </button>
+        `).join('');
+        html += `<button class="add-tab-btn" onclick="openModal('modalMainTab')">+ تبويب رئيسي</button>`;
+        bar.innerHTML = html;
+    }
+
+    function renderSubTabs() {
+        const bar = document.getElementById('subTabsBar');
+        const main = getActiveMain();
+        if (!main) {
+            bar.innerHTML = '';
+            return;
+        }
+        let html = main.subTabs.map(sub => `
+            <button class="sub-tab ${sub.id === appData.activeSubId ? 'active' : ''}" 
+                    onclick="selectSubTab('${sub.id}')">
+                ${sub.name}
+            </button>
+        `).join('');
+        html += `<button class="add-subtab-btn" onclick="openModal('modalSubTab')">+ إضافة صندوق فرعي</button>`;
+        bar.innerHTML = html;
+    }
+
+    function renderWorkspace() {
+        const container = document.getElementById('workspace');
+        const main = getActiveMain();
+        const sub = getActiveSub();
+
+        if (!sub) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p style="margin-bottom:12px;">لا يوجد صناديق فرعية داخل <strong>${main ? main.name : ''}</strong> بعد.</p>
+                    <button class="btn-submit btn-primary" style="max-width:220px;" onclick="openModal('modalSubTab')">+ إنشاء أول صندوق فرعي</button>
+                </div>
+            `;
+            return;
+        }
+
+        // Calculate Totals
+        let totalIn = 0;
+        let totalOut = 0;
+        let totalMembers = 0;
+
+        sub.transactions.forEach(tx => {
+            if (tx.kind === 'income') {
+                totalIn += tx.amount;
+                if (tx.membersCount) totalMembers += tx.membersCount;
+            } else {
+                totalOut += tx.amount;
+            }
+        });
+
+        const balance = totalIn - totalOut;
+        const typeLabel = sub.type === 'per_capita' 
+            ? `فروقات (الفرد: ${formatNumber(sub.sharePrice)})` 
+            : 'دخل جماعي مفتوح';
+
+        // Filter transactions
+        const filteredTx = sub.transactions.filter(tx => {
+            if (!searchQuery) return true;
+            const q = searchQuery.toLowerCase();
+            return (tx.source && tx.source.toLowerCase().includes(q)) ||
+                   (tx.details && tx.details.toLowerCase().includes(q)) ||
+                   (tx.remittanceNo && tx.remittanceNo.includes(q));
+        });
+
+        container.innerHTML = `
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <div class="subtab-header-info">
+                    <div>
+                        <div class="subtab-title">${sub.name}</div>
+                        ${sub.type === 'per_capita' ? `<small style="color:var(--text-muted)">إجمالي الأفراد المسددين: <b>${totalMembers}</b> فرد</small>` : ''}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="badge">${typeLabel}</span>
+                        <button onclick="deleteCurrentSubTab()" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:1rem;" title="حذف الصندوق">🗑️</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">إجمالي الوارد</div>
+                        <div class="stat-value in">${formatNumber(totalIn)}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">إجمالي المنصرف</div>
+                        <div class="stat-value out">${formatNumber(totalOut)}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">الرصيد المتبقي</div>
+                        <div class="stat-value bal">${formatNumber(balance)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Switcher -->
+            <div class="mode-switch">
+                <button class="mode-btn ${currentMode === 'income' ? 'active in-mode' : ''}" onclick="setMode('income')">
+                    ➕ تسجيل وارد (دفعة)
+                </button>
+                <button class="mode-btn ${currentMode === 'expense' ? 'active out-mode' : ''}" onclick="setMode('expense')">
+                    ➖ تسجيل منصرف
+                </button>
+            </div>
+
+            <!-- Entry Form -->
+            <div class="form-card">
+                ${currentMode === 'income' ? renderIncomeForm(sub) : renderExpenseForm()}
+            </div>
+
+            <!-- Transactions History -->
+            <div class="list-header">
+                <h3>سجل العمليات (${filteredTx.length})</h3>
+                <input type="text" class="search-box" placeholder="🔍 بحث بالاسم أو الحوالة..." 
+                       value="${searchQuery}" oninput="searchQuery = this.value; renderWorkspace();">
+            </div>
+
+            <div>
+                ${filteredTx.length === 0 ? '<div class="empty-state">لا توجد عمليات مسجلة حتى الآن</div>' : filteredTx.map(tx => renderTxItem(tx, sub)).join('')}
+            </div>
+        `;
+    }
+
+    function renderIncomeForm(sub) {
+        const isPerCapita = sub.type === 'per_capita';
+        return `
+            <form onsubmit="addTransaction(event)">
+                <div class="form-group">
+                    <label>${isPerCapita ? 'اسم رب الأسرة (يُحفظ تلقائياً)' : 'مصدر الدفعة / الاسم (يُحفظ تلقائياً)'}</label>
+                    <input type="text" id="txSource" list="savedSourcesList" placeholder="اكتب الاسم أو اختر من القائمة..." required autocomplete="off">
+                </div>
+
+                ${isPerCapita ? `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عدد الأفراد الذكور</label>
+                        <input type="number" id="txMembersCount" min="1" placeholder="مثال: 4" oninput="autoCalcPerCapita()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ المدفوع فعلياً</label>
+                        <input type="number" id="txAmount" step="any" placeholder="0" required>
+                    </div>
+                </div>
+                <div class="calc-hint" id="calcHintText">قيمة الفرد الواحد: ${formatNumber(sub.sharePrice)}</div>
+                <div style="margin-bottom:12px;"></div>
+                ` : `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المبلغ الواصل</label>
+                        <input type="number" id="txAmount" step="any" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" id="txDate" value="${getTodayDate()}" required>
+                    </div>
+                </div>
+                `}
+
+                <div class="form-row">
+                    ${isPerCapita ? `
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" id="txDate" value="${getTodayDate()}" required>
+                    </div>
+                    ` : ''}
+                    <div class="form-group">
+                        <label>طريقة الاستلام</label>
+                        <select id="txMethod" onchange="toggleRemittanceField()">
+                            <option value="نقد">نقد (كاش)</option>
+                            <option value="حوالة">حوالة مالية</option>
+                        </select>
+                    </div>
+                    ${!isPerCapita ? `
+                    <div class="form-group" id="remittanceGroup" style="display:none;">
+                        <label>رقم الحوالة</label>
+                        <input type="text" id="txRemittanceNo" placeholder="أدخل رقم الحوالة">
+                    </div>
+                    ` : ''}
+                </div>
+
+                ${isPerCapita ? `
+                <div class="form-group" id="remittanceGroup" style="display:none;">
+                    <label>رقم الحوالة</label>
+                    <input type="text" id="txRemittanceNo" placeholder="أدخل رقم الحوالة">
+                </div>
+                ` : ''}
+
+                <div class="form-group">
+                    <label>ملاحظات إضافية (اختياري)</label>
+                    <input type="text" id="txNotes" placeholder="أي تفاصيل أخرى...">
+                </div>
+
+                <button type="submit" class="btn-submit btn-in">💾 حفظ الدفعة الواردة</button>
+            </form>
+        `;
+    }
+
+    function renderExpenseForm() {
+        return `
+            <form onsubmit="addTransaction(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المبلغ المنصرف</label>
+                        <input type="number" id="txAmount" step="any" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" id="txDate" value="${getTodayDate()}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>تفاصيل المنصرف (أين صُرف؟)</label>
+                    <input type="text" id="txDetails" placeholder="اكتب بيان الصرف بوضوح..." required>
+                </div>
+                <button type="submit" class="btn-submit btn-out">💸 حفظ المنصرف</button>
+            </form>
+        `;
+    }
+
+    function renderTxItem(tx, sub) {
+        if (tx.kind === 'income') {
+            const diff = (sub.type === 'per_capita' && tx.expectedAmount > tx.amount) 
+                ? `<span class="tx-tag" style="background:#fef3c7; color:#b45309;">متبقي: ${formatNumber(tx.expectedAmount - tx.amount)}</span>` 
+                : '';
+            return `
+                <div class="tx-item">
+                    <div class="tx-info">
+                        <div class="tx-title">${tx.source}</div>
+                        <div class="tx-meta">
+                            <span>📅 ${tx.date}</span>
+                            <span class="tx-tag">${tx.method}${tx.remittanceNo ? ' #' + tx.remittanceNo : ''}</span>
+                            ${tx.membersCount ? `<span class="tx-tag">👥 ${tx.membersCount} أفراد</span>` : ''}
+                            ${diff}
+                        </div>
+                        ${tx.notes ? `<div style="font-size:0.8rem; color:#475569; margin-top:4px;">📝 ${tx.notes}</div>` : ''}
+                    </div>
+                    <div class="tx-right">
+                        <div class="tx-amount in">+${formatNumber(tx.amount)}</div>
+                        <button class="btn-del" onclick="deleteTransaction('${tx.id}')">حذف</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="tx-item expense">
+                    <div class="tx-info">
+                        <div class="tx-title">${tx.details}</div>
+                        <div class="tx-meta">
+                            <span>📅 ${tx.date}</span>
+                            <span class="tx-tag" style="background:#fee2e2; color:#991b1b;">منصرف</span>
+                        </div>
+                    </div>
+                    <div class="tx-right">
+                        <div class="tx-amount out">-${formatNumber(tx.amount)}</div>
+                        <button class="btn-del" onclick="deleteTransaction('${tx.id}')">حذف</button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // --- Backup & Share ---
+    function exportBackup() {
+        const dataStr = JSON.stringify(appData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `نسخة_صندوق_العائلة_${getTodayDate()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importBackup(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported && imported.mainTabs) {
+                    appData = imported;
+                    saveData();
+                    renderAll();
+                    closeModal('modalBackup');
+                    alert('تمت استعادة البيانات بنجاح!');
+                } else {
+                    alert('ملف غير صالح');
+                }
+            } catch (err) {
+                alert('حدث خطأ أثناء قراءة الملف');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function shareReport() {
+        const main = getActiveMain();
+        const sub = getActiveSub();
+        if (!sub) return alert('اختر صندوقاً أولاً');
+
+        let totalIn = 0, totalOut = 0;
+        let lines = [`📊 *كشف حساب: ${main.name} - ${sub.name}*`, `تاريخ التقرير: ${getTodayDate()}`, `-------------------`];
+
+        lines.push(`*📥 الواردات:*`);
+        sub.transactions.filter(t => t.kind === 'income').forEach(t => {
+            totalIn += t.amount;
+            let extra = t.membersCount ? ` (${t.membersCount} أفراد)` : '';
+            let rem = t.remittanceNo ? ` [حوالة: ${t.remittanceNo}]` : '';
+            lines.push(`- ${t.source}${extra}: ${formatNumber(t.amount)}${rem}`);
+        });
+
+        lines.push(`\n*📤 المنصرفات:*`);
+        sub.transactions.filter(t => t.kind === 'expense').forEach(t => {
+            totalOut += t.amount;
+            lines.push(`- ${t.details} (${t.date}): ${formatNumber(t.amount)}`);
+        });
+
+        lines.push(`-------------------`);
+        lines.push(`✅ إجمالي الوارد: ${formatNumber(totalIn)}`);
+        lines.push(`🔻 إجمالي المنصرف: ${formatNumber(totalOut)}`);
+        lines.push(`💰 *الرصيد المتبقي: ${formatNumber(totalIn - totalOut)}*`);
+
+        const text = lines.join('\n');
+        if (navigator.share) {
+            navigator.share({ title: sub.name, text: text }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(text);
+            alert('تم نسخ كشف الحساب إلى الحافظة، يمكنك لصقه في واتساب الآن!');
+        }
+    }
+
+    init();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
+</body>
+</html>
