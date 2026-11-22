@@ -9,6 +9,7 @@
     <title>صندوق العائلة والقبيلة</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
     <style>
         :root {
             --primary: #0f766e;
@@ -1197,13 +1198,15 @@
     }
 
     init();
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
-    });
-  }
+
+    // Register Service Worker for Offline PWA Support
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(err => {
+                console.log('ServiceWorker registration failed:', err);
+            });
+        });
+    }
 </script>
 </body>
 </html>
